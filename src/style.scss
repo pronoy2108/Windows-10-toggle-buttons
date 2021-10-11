@@ -1,0 +1,155 @@
+$color-toggle-on: rgb(0,120,215);
+$color-toggle-off: white;
+$transition: 200ms;
+$toggle-height: 2rem;
+$toggle-width: 5rem;
+$toggle-border: 2px;
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  font-size: 16px;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin-top: 4rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  background-color: #fafafa;
+}
+
+.about {
+  color: $color-toggle-on;
+}
+
+.toggles-info {
+  border-top: 1px solid darkgray;
+  transition: .2s;
+  text-align: center;
+  margin-top: 1rem;
+  padding: 2rem;
+  max-width: 30em;
+  > div {
+    overflow: hidden;
+    span {
+      position: relative;
+      display: inline-block;
+      min-width: 2.5rem;
+      &[on] {
+        color: $color-toggle-on;
+        float: left;
+      }
+      &[off] {
+        color: black;
+        float: left;
+      }
+      &[click] {
+        color: gray;
+        margin-left: .5rem;
+        float: left;
+      }
+    }
+  }
+}
+
+// *** start here ***
+.disappear-from-screen {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.toggle-component {
+  p {
+    margin: .7rem 0;
+  }
+  margin-bottom: 3rem;
+}
+
+.toggle {
+  // Do not visually style this, style the inner div instead
+  display: table;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin-bottom: 1rem;
+  input {
+    @extend .disappear-from-screen;
+    &:focus + div{
+      text-decoration: underline;    
+    }
+  }
+  > div {
+    // Style this
+    cursor: pointer;
+    border-radius: $toggle-height;
+    width: $toggle-width;
+    height: $toggle-height;
+    background: white;
+    border: $toggle-border solid black;
+    user-select: none;
+    position: relative;
+    transition: $transition ease-out;
+    font-size: 0;
+    &:hover {
+      box-shadow: 0 0 6px darken($color-toggle-on, 10%);
+    }
+    &:before {
+      will-change: translate;
+      display: block;
+      position: absolute;
+      top: calc(50% - .5rem);
+      left: .5rem;
+      content: '';
+      width: 1rem;
+      height: 1rem;
+      background: black;
+      border-radius: 50%;
+      transition: $transition;
+    }
+    &:after {
+      font-size: 1rem;
+      position: absolute;
+      right: -50%;
+      top: 50%;
+      transform: translateY(-50%);
+      content: attr(data-off);
+      pointer-events: none;
+    }
+  }
+  
+  input:checked + div {
+    background: $color-toggle-on;
+    border-color: $color-toggle-on;
+    &:before {
+      color: $color-toggle-on;
+      transform: translateX(280%); // IE11 fallback
+      transform: translateX(calc(2.5*100% + #{$toggle-border*2}));
+      background: $color-toggle-off;
+    }
+    &:after {
+      content: attr(data-on);
+    }
+  }
+}
+  
+input:focus + div {
+  &:after {
+    text-decoration: underline;
+  }
+}
